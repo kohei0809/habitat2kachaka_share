@@ -13,10 +13,15 @@ config.enable_stream(rs.stream.depth, 424, 240, rs.format.z16, 15)
 pipeline = rs.pipeline()
 pipeline.start(config)
 
+# AlignオブジェクトでRGBとDepthをキャリブレーション
+align_to = rs.stream.color
+align = rs.align(align_to)
+
 try:
     while True:
         # フレーム待ち
         frames = pipeline.wait_for_frames()
+        frames = align.process(frames)   
 
         # RGB
         color_frame = frames.get_color_frame()
