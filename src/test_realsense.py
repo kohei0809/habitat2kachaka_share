@@ -1,3 +1,5 @@
+# リアルタイムでrealsenseの画像をwindowsに表示するプログラム
+
 import pyrealsense2 as rs
 import numpy as np
 import cv2
