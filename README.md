@@ -6,11 +6,11 @@
 
 ## Install
 ```
-cd habitat2kachaka_share/kachaka-api/python/demos
+cd kachaka-api/python/demos
 pip install -r requirements.txt
 python -m grpc_tools.protoc -I../../protos --python_out=. --pyi_out=. --grpc_python_out=. ../../protos/kachaka-api.proto
 
-cd habitat2kachaka_shape
+cd /path/to/habitat2kachaka_shape
 pip install -r requirements.txt
 ```
 
