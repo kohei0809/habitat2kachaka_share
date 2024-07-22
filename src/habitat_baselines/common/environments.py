@@ -182,34 +182,21 @@ class InfoRLEnv(RLEnv):
 
     def get_reward(self, observations, **kwargs):
         reward = self._rl_config.SLACK_REWARD
-        ci = -1000
-        picture_value = -1
         info = self.get_info(observations)
 
-        if "smooth_map_value" in info:
-            smooth_current_area = info["smooth_map_value"]
-            area_reward = smooth_current_area / 50      
-            output = 0.0
-            reward += area_reward
-        else:
-            # area_rewardの計算
-            _top_down_map = info["top_down_map"]["map"]
-            _fog_of_war_map = info["top_down_map"]["fog_of_war_mask"]
+        # area_rewardの計算
+        _top_down_map = info["top_down_map"]["map"]
+        _fog_of_war_map = info["top_down_map"]["fog_of_war_mask"]
 
-            current_area = self._cal_explored_rate(_top_down_map, _fog_of_war_map)
-            current_area *= 10
-            # area_rewardを足す
-            area_reward = current_area - self._previous_area
-            reward += area_reward
-            output = 0.0
-            self._previous_area = current_area
-
-        measure = self._env.get_metrics()[self._picture_measure_name]
-        picture_value = measure
+        current_area = self._cal_explored_rate(_top_down_map, _fog_of_war_map)
+        current_area *= 10
+        # area_rewardを足す
+        area_reward = current_area - self._previous_area
+        reward += area_reward
+        output = 0.0
+        self._previous_area = current_area
         
-        agent_position = self._env._sim.get_agent_state()["position"]
-
-        return reward, picture_value, area_reward, output, self._take_picture(), None, agent_position[0], agent_position[2]
+        return reward, area_reward
         
     def get_polar_angle(self):
         agent_state = self._env._sim.get_agent_state()
@@ -221,9 +208,6 @@ class InfoRLEnv(RLEnv):
         phi = cartesian_to_polar(-heading_vector[2], heading_vector[0])[1]
         x_y_flip = -np.pi / 2
         return np.array(phi) + x_y_flip
-
-    def _take_picture(self):
-        return self._env.get_metrics()[self._take_picture_name]
 
     def get_done(self, observations):
         done = False

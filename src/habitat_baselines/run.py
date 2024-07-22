@@ -14,20 +14,15 @@ import numpy as np
 import torch
 from habitat_baselines.common.baseline_registry import baseline_registry
 from habitat_baselines.config.default import get_config    
-#from utils.log_manager import LogManager
 
 def main():
     exp_config = "habitat_baselines/config/maximuminfo/ppo_maximuminfo.yaml"
-    #exp_config = "habitat_baselines/config/maximuminfo/ppo_maximuminfo_rgb.yaml"
     agent_type = "oracle-ego"
     run_type = "eval"
     start_date = datetime.datetime.now().strftime('%y-%m-%d %H-%M-%S') 
     
     if run_type == "eval":
-        datadate = "23-10-26 18-29-56"
-        datadate = "23-12-26 04-22-23"
-        datadate = "24-04-26 00-36-56"
-        datadate = "24-05-16 16-06-47"
+        # 学習済みモデルの日付
         datadate = "24-06-30 03-48-07"
 
     config = get_config(exp_config)
@@ -40,7 +35,6 @@ def main():
     config.TASK_CONFIG.TRAINER_NAME = agent_type
     config.CHECKPOINT_FOLDER = "cpt/" + start_date
     config.EVAL_CKPT_PATH_DIR = "cpt/" + datadate 
-    #config.VIDEO_OPTION = []
     config.VIDEO_OPTION = ["disk"]
     config.freeze()
     
@@ -64,10 +58,6 @@ def main():
     assert trainer_init is not None, f"{config.TRAINER_NAME} is not supported"
     trainer = trainer_init(config)
     
-    #ログファイルの設定   
-    #log_manager = LogManager()
-    #log_manager.setLogDirectory("./log/" + start_date + "/" + run_type)
-    
     device = (
         torch.device("cuda", config.TORCH_GPU_ID)
         if torch.cuda.is_available()
@@ -78,9 +68,9 @@ def main():
     print("-----------------------------------")
 
     
+    # kachakaのipアドレス
     ip = "192.168.100.47:26400"
     trainer._exec_kachaka(start_date, ip)
-    #trainer._exec_kachaka(log_manager, start_date, ip)
        
     end_date = datetime.datetime.now().strftime('%y-%m-%d %H-%M-%S') 
     print("Start at " + start_date)
