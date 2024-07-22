@@ -16,5 +16,5 @@ pip install -r requirements.txt
 
 
 ## Usage
-・habitat-simで学習したモデルの使用を想定
-ppo_trainer.pyやenvironment.py、nav.py、ppo.pyなどを自身のプログラムから一部コピペしての使用を推奨
+・habitat-simで学習したモデルの使用を想定<br>
+・ppo_trainer.pyやenvironment.py、nav.py、ppo.pyなどを自身のプログラムから一部コピペしての使用を推奨
